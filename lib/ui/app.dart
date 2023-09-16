@@ -6,6 +6,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return MaterialApp(
+      home: const HomePage(),
+      theme: ThemeData(fontFamily: 'Inter'),
+    );
   }
 }
