@@ -53,18 +53,17 @@ extension GetItInjectableX on _i1.GetIt {
       () => repositoryModule.getRedirectUrl(gh<_i3.DotEnv>()),
       instanceName: 'redirectUrl',
     );
-    await gh.singletonAsync<_i6.SpotifyRemoteRepository>(
+    gh.singleton<_i6.SpotifyRemoteRepository>(_i6.SpotifyRemoteRepository(
+      gh<String>(instanceName: 'clientId'),
+      gh<String>(instanceName: 'redirectUrl'),
+    ));
+    await gh.singletonAsync<_i7.SpotifyRemoteService>(
       () {
-        final i = _i6.SpotifyRemoteRepository(
-          gh<String>(instanceName: 'clientId'),
-          gh<String>(instanceName: 'redirectUrl'),
-        );
+        final i = _i7.SpotifyRemoteService(gh<_i6.SpotifyRemoteRepository>());
         return i.connect().then((_) => i);
       },
       preResolve: true,
     );
-    gh.singleton<_i7.SpotifyRemoteService>(
-        _i7.SpotifyRemoteService(gh<_i6.SpotifyRemoteRepository>()));
     gh.factory<_i8.HomeBloc>(
         () => _i8.HomeBloc(gh<_i7.SpotifyRemoteService>()));
     return this;

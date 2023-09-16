@@ -14,3 +14,17 @@ class SkipNextHomeEvent extends HomeEvent {}
 
 @immutable
 class SkipPreviousHomeEvent extends HomeEvent {}
+
+@immutable
+class SaveTrackHomeEvent extends HomeEvent {
+  final String uri;
+
+  SaveTrackHomeEvent(this.uri);
+}
+
+@immutable
+class RemoveTrackHomeEvent extends HomeEvent {
+  final String uri;
+
+  RemoveTrackHomeEvent(this.uri);
+}

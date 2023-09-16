@@ -9,8 +9,9 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(final BuildContext context) =>
-      BlocInjector<HomeBloc>(child: const HomeWidget());
+  Widget build(final BuildContext context) => BlocInjector<HomeBloc>(
+        child: const HomeWidget(),
+      );
 }
 
 class HomeWidget extends StatelessWidget {

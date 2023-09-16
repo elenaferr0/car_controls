@@ -4,7 +4,6 @@ import 'package:logging/logging.dart';
 import 'package:spotify_sdk/enums/image_dimension_enum.dart';
 import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_state.dart';
-
 import '../repository/spotify_remote_repository.dart';
 
 enum PlayerAction { skipPrevious, skipNext, pause, play, toggleShuffle }
@@ -15,6 +14,13 @@ class SpotifyRemoteService {
   static final log = Logger('SpotifyRemoteService');
 
   const SpotifyRemoteService(this._repository);
+
+  @PostConstruct(preResolve: true)
+  Future<void> connect() async {
+    // TODO: save in shared preferences
+    // await _repository.askForAuthorization();
+    await _repository.connect();
+  }
 
   Future<void> performAction(final PlayerAction action) async {
     try {
@@ -53,4 +59,12 @@ class SpotifyRemoteService {
     final ImageDimension dimension = ImageDimension.large,
   }) =>
       _repository.getImage(imageUri);
+
+  Future<bool> isTrackInLibrary(final String uri) async =>
+      _repository.isTrackInLibrary(uri);
+
+  Future<void> saveTrack(final String uri) async => _repository.saveTrack(uri);
+
+  Future<void> removeTrack(final String uri) async =>
+      _repository.removeTrack(uri);
 }

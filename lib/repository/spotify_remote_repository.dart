@@ -17,7 +17,6 @@ class SpotifyRemoteRepository {
     @Named('redirectUrl') this._redirectUrl,
   );
 
-  @PostConstruct(preResolve: true)
   Future<void> connect() async {
     final connected = await SpotifySdk.connectToSpotifyRemote(
       clientId: _clientId,
@@ -67,5 +66,35 @@ class SpotifyRemoteRepository {
   }) async {
     if (imageUri == null) return null;
     return SpotifySdk.getImage(imageUri: imageUri, dimension: dimension);
+  }
+
+  Future<void> askForAuthorization() async {
+    final scopes = [
+      'app-remote-control',
+      'user-modify-playback-state',
+      'user-read-currently-playing',
+      'user-library-read',
+      'user-library-modify',
+    ];
+
+    await SpotifySdk.getAccessToken(
+      clientId: _clientId,
+      redirectUrl: _redirectUrl,
+      scope: scopes.join(', '),
+    );
+  }
+
+  Future<bool> isTrackInLibrary(final String uri) async {
+    final libraryState = await SpotifySdk.getLibraryState(spotifyUri: uri);
+    if (libraryState == null) return false;
+    return libraryState.isSaved;
+  }
+
+  Future<void> saveTrack(final String uri) async {
+    await SpotifySdk.addToLibrary(spotifyUri: uri);
+  }
+
+  Future<void> removeTrack(final String uri) async {
+    await SpotifySdk.removeFromLibrary(spotifyUri: uri);
   }
 }

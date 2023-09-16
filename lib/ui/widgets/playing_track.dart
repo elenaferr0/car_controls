@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
@@ -26,7 +24,7 @@ class PlayingTrackWidget extends StatelessWidget {
 
 /// Allows optimization of the image widget, reloading only it changes
 class _ImageWidget extends StatelessWidget {
-  static const imageSize = 400.0;
+  static const imageSize = 450.0;
 
   const _ImageWidget();
 
@@ -39,7 +37,6 @@ class _ImageWidget extends StatelessWidget {
           previous.image != current.image,
       builder: (final context, final state) {
         final image = (state as AvailableDataHomeState).image;
-        // image with border radius
         return Padding(
           padding: const EdgeInsets.all(padding),
           child: Container(
@@ -47,10 +44,12 @@ class _ImageWidget extends StatelessWidget {
             width: imageSize,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: MemoryImage(image ?? Uint8List(0)),
-                fit: BoxFit.cover,
-              ),
+              image: image != null
+                  ? DecorationImage(
+                      image: MemoryImage(image!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
           ),
         );
@@ -87,7 +86,7 @@ class _TrackInfoWidget extends StatelessWidget {
 }
 
 class _ControlsWidget extends StatelessWidget {
-  static const iconSize = 65.0;
+  static const iconSize = 70.0;
 
   const _ControlsWidget();
 
@@ -101,25 +100,53 @@ class _ControlsWidget extends StatelessWidget {
           previous.isPaused != current.isPaused,
       builder: (final context, final state) {
         final state = context.watch<HomeBloc>().state as AvailableDataHomeState;
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        return Column(
           children: [
-            IconButton(
-              onPressed: () => bloc.add(SkipPreviousHomeEvent()),
-              icon: const Icon(Icons.skip_previous, size: iconSize),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () => bloc.add(SkipPreviousHomeEvent()),
+                  icon: const Icon(Icons.skip_previous, size: iconSize),
+                ),
+                state.isPaused
+                    ? IconButton(
+                        onPressed: () => bloc.add(PlayHomeEvent()),
+                        icon:
+                            const Icon(Icons.play_circle, size: iconSize * 1.5),
+                      )
+                    : IconButton(
+                        onPressed: () => bloc.add(PauseHomeEvent()),
+                        icon: const Icon(Icons.pause_circle,
+                            size: iconSize * 1.5),
+                      ),
+                IconButton(
+                  onPressed: () => bloc.add(SkipNextHomeEvent()),
+                  icon: const Icon(Icons.skip_next, size: iconSize),
+                ),
+              ],
             ),
-            state.isPaused
-                ? IconButton(
-                    onPressed: () => bloc.add(PlayHomeEvent()),
-                    icon: const Icon(Icons.play_circle, size: iconSize * 1.5),
-                  )
-                : IconButton(
-                    onPressed: () => bloc.add(PauseHomeEvent()),
-                    icon: const Icon(Icons.pause_circle, size: iconSize * 1.5),
-                  ),
-            IconButton(
-              onPressed: () => bloc.add(SkipNextHomeEvent()),
-              icon: const Icon(Icons.skip_next, size: iconSize),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                state.isTrackInLibrary
+                    ? IconButton(
+                        onPressed: () => bloc.add(
+                          RemoveTrackHomeEvent(state.track.uri),
+                        ),
+                        icon: const Icon(Icons.favorite, size: iconSize * 0.7),
+                      )
+                    : IconButton(
+                        onPressed: () => bloc.add(
+                          SaveTrackHomeEvent(state.track.uri),
+                        ),
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          size: iconSize * 0.7,
+                        ),
+                      ),
+              ],
             ),
           ],
         );
