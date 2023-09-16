@@ -28,3 +28,10 @@ class RemoveTrackHomeEvent extends HomeEvent {
 
   RemoveTrackHomeEvent(this.uri);
 }
+
+@immutable
+class ToggleShuffleHomeEvent extends HomeEvent {
+  final bool currentStatus;
+
+  ToggleShuffleHomeEvent(this.currentStatus);
+}

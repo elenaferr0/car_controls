@@ -14,6 +14,7 @@ class PlayingTrackWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _ImageWidget(),
+        SizedBox(height: 10),
         _TrackInfoWidget(),
         SizedBox(height: 20),
         _ControlsWidget(),
@@ -43,7 +44,15 @@ class _ImageWidget extends StatelessWidget {
             height: imageSize,
             width: imageSize,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
               image: image != null
                   ? DecorationImage(
                       image: MemoryImage(image!),
@@ -71,13 +80,15 @@ class _TrackInfoWidget extends StatelessWidget {
         children: [
           Text(
             state.track.name,
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
           Text(
-            state.track.artist.name!,
-            style: const TextStyle(fontSize: 25),
+            state.track.artists.map((final a) => a.name).join(', '),
+            style: const TextStyle(fontSize: 30),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ],
       ),
@@ -87,6 +98,7 @@ class _TrackInfoWidget extends StatelessWidget {
 
 class _ControlsWidget extends StatelessWidget {
   static const iconSize = 70.0;
+  static const Color iconColor = Colors.black87;
 
   const _ControlsWidget();
 
@@ -107,35 +119,54 @@ class _ControlsWidget extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () => bloc.add(SkipPreviousHomeEvent()),
-                  icon: const Icon(Icons.skip_previous, size: iconSize),
+                  icon: const Icon(
+                    Icons.skip_previous,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
                 ),
                 state.isPaused
                     ? IconButton(
                         onPressed: () => bloc.add(PlayHomeEvent()),
-                        icon:
-                            const Icon(Icons.play_circle, size: iconSize * 1.5),
+                        icon: const Icon(
+                          Icons.play_circle,
+                          size: iconSize * 1.5,
+                          color: iconColor,
+                        ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(PauseHomeEvent()),
-                        icon: const Icon(Icons.pause_circle,
-                            size: iconSize * 1.5),
+                        icon: const Icon(
+                          Icons.pause_circle,
+                          size: iconSize * 1.5,
+                          color: iconColor,
+                        ),
                       ),
                 IconButton(
                   onPressed: () => bloc.add(SkipNextHomeEvent()),
-                  icon: const Icon(Icons.skip_next, size: iconSize),
+                  icon: const Icon(
+                    Icons.skip_next,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 state.isTrackInLibrary
                     ? IconButton(
                         onPressed: () => bloc.add(
                           RemoveTrackHomeEvent(state.track.uri),
                         ),
-                        icon: const Icon(Icons.favorite, size: iconSize * 0.7),
+                        icon: const Icon(
+                          Icons.favorite,
+                          size: iconSize * 0.7,
+                          color: iconColor,
+                        ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(
@@ -144,8 +175,25 @@ class _ControlsWidget extends StatelessWidget {
                         icon: const Icon(
                           Icons.favorite_border,
                           size: iconSize * 0.7,
+                          color: iconColor,
                         ),
                       ),
+                IconButton(
+                  onPressed: () => bloc.add(
+                    ToggleShuffleHomeEvent(state.isShuffleEnabled),
+                  ),
+                  icon: state.isShuffleEnabled
+                      ? const Icon(
+                          Icons.shuffle,
+                          size: iconSize * 0.7,
+                          color: iconColor,
+                        )
+                      : const Icon(
+                          Icons.shuffle_outlined,
+                          size: iconSize * 0.7,
+                          color: Colors.black45,
+                        ),
+                ),
               ],
             ),
           ],

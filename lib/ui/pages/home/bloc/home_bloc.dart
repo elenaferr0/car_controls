@@ -27,9 +27,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeEvent>((final event, final emitter) async {
       switch (event) {
         case PlayHomeEvent():
-          await _resume(event, emitter);
+          await _resume();
         case PauseHomeEvent():
-          await _pause(event, emitter);
+          await _pause();
         case SkipNextHomeEvent():
           await _skipNext();
         case SkipPreviousHomeEvent():
@@ -38,18 +38,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           await _saveTrack(event.uri);
         case RemoveTrackHomeEvent():
           await _removeTrack(event.uri);
+        case ToggleShuffleHomeEvent():
+          await _toggleShuffle(event, emitter);
       }
     });
   }
 
-  Future<void> _resume(
-    final HomeEvent event,
-    final Emitter<HomeState> emitter,
-  ) async {
+  Future<void> _resume() async {
     await _spotifyRemoteService.performAction(PlayerAction.play);
   }
 
-  Future<void> _pause(final HomeEvent event, final Emitter emitter) async {
+  Future<void> _pause() async {
     await _spotifyRemoteService.performAction(PlayerAction.pause);
   }
 
@@ -86,15 +85,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       isPaused: playerState.isPaused,
       image: image,
       isTrackInLibrary: isTrackInLibrary,
+      isShuffleEnabled: playerState.playbackOptions.isShuffling,
     ));
   }
-  
+
   Future<void> _saveTrack(final String uri) async {
     await _spotifyRemoteService.saveTrack(uri);
   }
-  
+
   Future<void> _removeTrack(final String uri) async {
     await _spotifyRemoteService.removeTrack(uri);
+  }
+
+  Future<void> _toggleShuffle(
+    final HomeEvent event,
+    final Emitter emitter,
+  ) async {
+    await _spotifyRemoteService
+        .toggleShuffle((state as AvailableDataHomeState).isShuffleEnabled);
   }
 
   @override
