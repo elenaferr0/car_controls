@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
@@ -24,6 +26,8 @@ class PlayingTrackWidget extends StatelessWidget {
 
 /// Allows optimization of the image widget, reloading only it changes
 class _ImageWidget extends StatelessWidget {
+  static const imageSize = 400.0;
+
   const _ImageWidget();
 
   @override
@@ -35,24 +39,21 @@ class _ImageWidget extends StatelessWidget {
           previous.image != current.image,
       builder: (final context, final state) {
         final image = (state as AvailableDataHomeState).image;
-        if (image == null) {
-          return const CircularProgressIndicator();
-        } else {
-          // image with border radius
-          return Padding(
-            padding: const EdgeInsets.all(padding),
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.memory(
-                  image,
-                  fit: BoxFit.cover,
-                  // errorBuilder: (final context, final error, final stackTrace) {
-                  //   bloc.add(NoDataHomeState());
-                  //   return const Icon(Icons.error);
-                  // },
-                )),
-          );
-        }
+        // image with border radius
+        return Padding(
+          padding: const EdgeInsets.all(padding),
+          child: Container(
+            height: imageSize,
+            width: imageSize,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: MemoryImage(image ?? Uint8List(0)),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
       },
     );
   }
