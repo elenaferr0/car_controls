@@ -6,7 +6,7 @@ import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import '../repository/spotify_remote_repository.dart';
 
-enum PlayerAction { skipPrevious, skipNext, pause, play, toggleShuffle }
+enum PlayerAction { skipPrevious, skipNext, pause, play }
 
 @singleton
 class SpotifyRemoteService {
@@ -30,7 +30,6 @@ class SpotifyRemoteService {
         PlayerAction.skipNext => _repository.skipNext,
         PlayerAction.pause => _repository.pause,
         PlayerAction.play => _repository.play,
-        PlayerAction.toggleShuffle => _repository.toggleShuffle
       };
 
       await matchingFunction();
@@ -67,4 +66,7 @@ class SpotifyRemoteService {
 
   Future<void> removeTrack(final String uri) async =>
       _repository.removeTrack(uri);
+
+  Future<void> toggleShuffle(final bool currentStatus) async =>
+      _repository.toggleShuffle(currentStatus);
 }

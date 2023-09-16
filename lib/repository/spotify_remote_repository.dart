@@ -46,8 +46,8 @@ class SpotifyRemoteRepository {
     await SpotifySdk.resume();
   }
 
-  Future<void> toggleShuffle() async {
-    await SpotifySdk.toggleShuffle();
+  Future<void> toggleShuffle(final bool currentStatus) async {
+    await SpotifySdk.setShuffle(shuffle: !currentStatus);
   }
 
   Future<bool> isPaused() async {

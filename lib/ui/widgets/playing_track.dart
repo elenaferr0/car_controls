@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
+import 'dotted_icon.dart';
 
 const padding = 20.0;
 
@@ -87,6 +88,7 @@ class _TrackInfoWidget extends StatelessWidget {
 
 class _ControlsWidget extends StatelessWidget {
   static const iconSize = 70.0;
+  static const Color iconColor = Colors.black87;
 
   const _ControlsWidget();
 
@@ -107,35 +109,54 @@ class _ControlsWidget extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () => bloc.add(SkipPreviousHomeEvent()),
-                  icon: const Icon(Icons.skip_previous, size: iconSize),
+                  icon: const Icon(
+                    Icons.skip_previous,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
                 ),
                 state.isPaused
                     ? IconButton(
                         onPressed: () => bloc.add(PlayHomeEvent()),
-                        icon:
-                            const Icon(Icons.play_circle, size: iconSize * 1.5),
+                        icon: const Icon(
+                          Icons.play_circle,
+                          size: iconSize * 1.5,
+                          color: iconColor,
+                        ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(PauseHomeEvent()),
-                        icon: const Icon(Icons.pause_circle,
-                            size: iconSize * 1.5),
+                        icon: const Icon(
+                          Icons.pause_circle,
+                          size: iconSize * 1.5,
+                          color: iconColor,
+                        ),
                       ),
                 IconButton(
                   onPressed: () => bloc.add(SkipNextHomeEvent()),
-                  icon: const Icon(Icons.skip_next, size: iconSize),
+                  icon: const Icon(
+                    Icons.skip_next,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 state.isTrackInLibrary
                     ? IconButton(
                         onPressed: () => bloc.add(
                           RemoveTrackHomeEvent(state.track.uri),
                         ),
-                        icon: const Icon(Icons.favorite, size: iconSize * 0.7),
+                        icon: const Icon(
+                          Icons.favorite,
+                          size: iconSize * 0.7,
+                          color: iconColor,
+                        ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(
@@ -144,8 +165,25 @@ class _ControlsWidget extends StatelessWidget {
                         icon: const Icon(
                           Icons.favorite_border,
                           size: iconSize * 0.7,
+                          color: iconColor,
                         ),
                       ),
+                IconButton(
+                  onPressed: () => bloc.add(
+                    ToggleShuffleHomeEvent(state.isShuffleEnabled),
+                  ),
+                  icon: state.isShuffleEnabled
+                      ? const Icon(
+                          Icons.shuffle,
+                          size: iconSize * 0.7,
+                          color: iconColor,
+                        )
+                      : const Icon(
+                          Icons.shuffle_outlined,
+                          size: iconSize * 0.7,
+                          color: Colors.black45,
+                        ),
+                ),
               ],
             ),
           ],
