@@ -8,8 +8,8 @@ class App extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
       theme: ThemeData(fontFamily: 'Inter'),
+      home: const HomePage(),
     );
   }
 }

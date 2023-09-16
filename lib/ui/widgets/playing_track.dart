@@ -5,20 +5,38 @@ import '../pages/home/bloc/home_bloc.dart';
 const padding = 20.0;
 
 class PlayingTrackWidget extends StatelessWidget {
-  const PlayingTrackWidget({super.key});
+  PlayingTrackWidget({super.key});
+
+  var delta = 0.0;
 
   @override
   Widget build(final BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _ImageWidget(),
-        SizedBox(height: 10),
-        _TrackInfoWidget(),
-        SizedBox(height: 20),
-        _ControlsWidget(),
-      ],
+    final bloc = context.read<HomeBloc>();
+    return GestureDetector(
+      onVerticalDragUpdate: (final details) {
+        // Calculate the vertical distance of the swipe
+        final dy = details.primaryDelta ?? 0;
+        if (dy.abs() > delta.abs()) delta = dy;
+      },
+      onVerticalDragEnd: (final details) {
+        if (delta < 0) {
+          bloc.add(SwipeGestureDetectedHomeEvent(Direction.up));
+        } else if (delta > 0) {
+          bloc.add(SwipeGestureDetectedHomeEvent(Direction.down));
+        }
+        delta = 0;
+      },
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _ImageWidget(),
+          SizedBox(height: 10),
+          _TrackInfoWidget(),
+          SizedBox(height: 20),
+          _ControlsWidget(),
+        ],
+      ),
     );
   }
 }

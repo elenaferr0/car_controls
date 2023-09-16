@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 @module
 abstract class RepositoryModule {
@@ -10,9 +11,12 @@ abstract class RepositoryModule {
     return dotenv;
   }
 
+  @singleton
+  VolumeController getVolumeController() => VolumeController();
+
   @Named('clientId')
-  String getClientId(DotEnv dotenv) => dotenv.env['CLIENT_ID']!;
+  String getClientId(final DotEnv dotenv) => dotenv.env['CLIENT_ID']!;
 
   @Named('redirectUrl')
-  String getRedirectUrl(DotEnv dotenv) => dotenv.env['REDIRECT_URL']!;
+  String getRedirectUrl(final DotEnv dotenv) => dotenv.env['REDIRECT_URL']!;
 }

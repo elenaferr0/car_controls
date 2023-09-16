@@ -10,6 +10,7 @@ import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/models/track.dart';
 import '../../../../business/spotify_remote_service.dart';
+import '../../../../business/volume_service.dart';
 
 part 'home_event.dart';
 
@@ -18,10 +19,14 @@ part 'home_state.dart';
 @injectable
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SpotifyRemoteService _spotifyRemoteService;
+  final VolumeService _volumeService;
   late final StreamSubscription _playerSubscription;
   final Map<ImageUri, Uint8List> _cachedImages = {};
 
-  HomeBloc(this._spotifyRemoteService) : super(NoDataHomeState()) {
+  HomeBloc(
+    this._spotifyRemoteService,
+    this._volumeService,
+  ) : super(NoDataHomeState()) {
     _playerSubscription =
         _spotifyRemoteService.playerState.listen(_onPlayerStateChanged);
     on<HomeEvent>((final event, final emitter) async {
@@ -40,6 +45,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           await _removeTrack(event.uri);
         case ToggleShuffleHomeEvent():
           await _toggleShuffle(event, emitter);
+        case SwipeGestureDetectedHomeEvent():
+          _swipeGestureDetected(event, emitter);
       }
     });
   }
@@ -103,6 +110,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     await _spotifyRemoteService
         .toggleShuffle((state as AvailableDataHomeState).isShuffleEnabled);
+  }
+
+  void _swipeGestureDetected(
+    final SwipeGestureDetectedHomeEvent event,
+    final Emitter emitter,
+  ) {
+    if (event.direction == Direction.up) {
+      _volumeService.increaseVolume(VolumeService.defaultVolumeDelta);
+    } else {
+      _volumeService.decreaseVolume(VolumeService.defaultVolumeDelta);
+    }
   }
 
   @override

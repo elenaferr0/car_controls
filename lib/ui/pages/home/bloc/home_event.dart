@@ -35,3 +35,12 @@ class ToggleShuffleHomeEvent extends HomeEvent {
 
   ToggleShuffleHomeEvent(this.currentStatus);
 }
+
+enum Direction { up, down }
+
+@immutable
+class SwipeGestureDetectedHomeEvent extends HomeEvent {
+  final Direction direction;
+
+  SwipeGestureDetectedHomeEvent(this.direction);
+}
