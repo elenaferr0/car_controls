@@ -26,7 +26,7 @@ class HomeWidget extends StatelessWidget {
             if (state is NoDataHomeState) {
               return const Text('No data');
             } else if (state is AvailableDataHomeState) {
-              return PlayingTrackWidget();
+              return const PlayingTrackWidget();
             } else {
               return const Center(
                 child: Text('Unknown state'),

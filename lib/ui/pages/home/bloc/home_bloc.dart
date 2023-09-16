@@ -118,8 +118,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) {
     if (event.direction == Direction.up) {
       _volumeService.increaseVolume(VolumeService.defaultVolumeDelta);
-    } else {
+    } else if (event.direction == Direction.down) {
       _volumeService.decreaseVolume(VolumeService.defaultVolumeDelta);
+    } else if (event.direction == Direction.left) {
+      add(SkipNextHomeEvent());
+    } else if (event.direction == Direction.right) {
+      add(SkipPreviousHomeEvent());
     }
   }
 

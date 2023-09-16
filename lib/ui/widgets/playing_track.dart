@@ -1,31 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
-import 'dotted_icon.dart';
 
 const padding = 20.0;
 
 class PlayingTrackWidget extends StatelessWidget {
-  PlayingTrackWidget({super.key});
-
-  var delta = 0.0;
+  const PlayingTrackWidget({super.key});
 
   @override
   Widget build(final BuildContext context) {
+    var deltaY = 0.0;
+    var deltaX = 0.0;
+
     final bloc = context.read<HomeBloc>();
     return GestureDetector(
       onVerticalDragUpdate: (final details) {
         // Calculate the vertical distance of the swipe
         final dy = details.primaryDelta ?? 0;
-        if (dy.abs() > delta.abs()) delta = dy;
+        if (dy.abs() > deltaY.abs()) deltaY = dy;
       },
       onVerticalDragEnd: (final details) {
-        if (delta < 0) {
+        if (deltaY < 0) {
           bloc.add(SwipeGestureDetectedHomeEvent(Direction.up));
-        } else if (delta > 0) {
+        } else if (deltaY > 0) {
           bloc.add(SwipeGestureDetectedHomeEvent(Direction.down));
         }
-        delta = 0;
+        deltaY = 0;
+      },
+      onHorizontalDragUpdate: (final details) {
+        // Calculate the horizontal distance of the swipe
+        final dx = details.primaryDelta ?? 0;
+        if (dx.abs() > deltaX.abs()) deltaX = dx;
+      },
+      onHorizontalDragEnd: (final details) {
+        if (deltaX < 0) {
+          bloc.add(SwipeGestureDetectedHomeEvent(Direction.left));
+        } else if (deltaX > 0) {
+          bloc.add(SwipeGestureDetectedHomeEvent(Direction.right));
+        }
+        deltaX = 0;
       },
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +87,7 @@ class _ImageWidget extends StatelessWidget {
               ],
               image: image != null
                   ? DecorationImage(
-                      image: MemoryImage(image!),
+                      image: MemoryImage(image),
                       fit: BoxFit.cover,
                     )
                   : null,
