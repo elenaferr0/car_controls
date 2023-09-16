@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 import 'locator.dart';
+import 'ui/app.dart';
 
 void main() async {
-  buildDependencyGraph();
+  await buildDependencyGraph();
+  runApp(const App());
 }
