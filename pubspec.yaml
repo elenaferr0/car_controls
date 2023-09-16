@@ -11,6 +11,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   get_it: ^7.6.4
   injectable: ^2.3.0
+  keep_screen_on: ^2.1.0
   logging: ^1.2.0
   spotify_sdk: 3.0.0-dev.2
 dev_dependencies:

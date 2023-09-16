@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/models/track.dart';
 
@@ -67,8 +68,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   @override
-  Future<void> close() {
-    _playerSubscription.cancel();
+  Future<void> close() async {
+    await _playerSubscription.cancel();
+    await KeepScreenOn.turnOff();
     return super.close();
   }
 }
