@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
+import 'dotted_icon.dart';
 
 const padding = 20.0;
 
