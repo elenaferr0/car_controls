@@ -1,7 +1,6 @@
-package com.elenaferro.car_controls
+package com.example.car_controls
 
-import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity() {
-
 }
