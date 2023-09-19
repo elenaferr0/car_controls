@@ -13,6 +13,7 @@ dependencies:
   flutter_notification_listener:
     path: packages/flutter_notification_listener
   get_it: ^7.6.4
+  go_router: ^10.1.3
   injectable: ^2.3.0
   keep_screen_on: ^2.1.0
   logging: ^1.2.0

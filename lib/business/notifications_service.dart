@@ -6,23 +6,25 @@ import 'package:flutter_notification_listener/flutter_notification_listener.dart
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import 'models/minimal_notification.dart';
+
 // we must use static method, to handle in background
 @singleton
 class NotificationsService {
   final _port = ReceivePort();
   static final log = Logger('NotificationsService');
-  final _controller = StreamController<NotificationEvent>();
-  
-  Stream<NotificationEvent> get notificationStream => _controller.stream;
+  final _controller = StreamController<MinimalNotification>();
 
-  @pragma('vm:entry-point') // prevent dart from stripping out this function on release build in Flutter 3.x
+  Stream<MinimalNotification> get notificationStream => _controller.stream;
+
+  @pragma('vm:entry-point')
   static void _callback(final NotificationEvent evt) {
     log.info('send evt to ui: $evt');
     final SendPort? send = IsolateNameServer.lookupPortByName('_listener_');
     if (send == null) log.info("can't find the sender");
     send?.send(evt);
   }
-  
+
   @PostConstruct(preResolve: true)
   Future<void> initPlatformState() async {
     unawaited(NotificationsListener.initialize(callbackHandle: _callback));
@@ -32,7 +34,7 @@ class NotificationsService {
     IsolateNameServer.registerPortWithName(_port.sendPort, '_listener_');
     _port.listen((final event) {
       log.fine('receive event from background: $event');
-      _controller.add(event);
+      _controller.add(MinimalNotification.fromNotificationEvent(event));
     });
 
     // don't use the default receivePort
@@ -43,7 +45,7 @@ class NotificationsService {
 
     await _startListening();
   }
-  
+
   Future<void> _startListening() async {
     log.info('start listening');
     final hasPermission = (await NotificationsListener.hasPermission) ?? false;
@@ -69,5 +71,4 @@ class NotificationsService {
     log.info('stop listening');
     await NotificationsListener.stopService();
   }
-  
 }

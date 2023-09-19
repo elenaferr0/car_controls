@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../locator.dart';
+import '../../router/fade_in_go_route.dart';
 import '../../widgets/playing_track.dart';
 import 'bloc/home_bloc.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeRoute extends FadeInGoRoute {
+  static const String _path = '/';
 
-  @override
-  Widget build(final BuildContext context) => BlocInjector<HomeBloc>(
-        child: const HomeWidget(),
-      );
+  static String buildLocation() => _path;
+
+  HomeRoute() : super(path: _path, builder: _builder);
+
+  static Widget _builder(
+    final BuildContext context,
+    final GoRouterState state,
+  ) => BlocInjector<HomeBloc>(child: const _HomeWidget());
 }
 
-class HomeWidget extends StatelessWidget {
-  const HomeWidget({super.key});
+class _HomeWidget extends StatelessWidget {
+  const _HomeWidget();
 
   @override
   Widget build(final BuildContext context) {
@@ -25,6 +31,8 @@ class HomeWidget extends StatelessWidget {
           builder: (final context, final state) {
             if (state is NoDataHomeState) {
               return const Text('No data');
+            } else if (state is LoadingHomeState) {
+              return const CircularProgressIndicator();
             } else if (state is AvailableDataHomeState) {
               return const PlayingTrackWidget();
             } else {

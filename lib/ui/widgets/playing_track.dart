@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../locator.dart';
 import '../pages/home/bloc/home_bloc.dart';
+import '../router/app_router.dart';
 
 const padding = 20.0;
 

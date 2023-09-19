@@ -26,7 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc(
     this._spotifyRemoteService,
     this._volumeService,
-  ) : super(NoDataHomeState()) {
+  ) : super(LoadingHomeState()) {
     _playerSubscription =
         _spotifyRemoteService.playerState.listen(_onPlayerStateChanged);
     on<HomeEvent>((final event, final emitter) async {

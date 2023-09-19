@@ -43,3 +43,8 @@ class NoDataHomeState extends HomeState {
   @override
   List<Object?> get props => [];
 }
+
+class LoadingHomeState extends HomeState {
+  @override
+  List<Object?> get props => [];
+}

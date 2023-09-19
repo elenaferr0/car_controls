@@ -52,6 +52,9 @@ android {
 
     buildTypes {
         release {
+            // needed otherwise won't work in release mode
+            shrinkResources false
+            minifyEnabled false
             signingConfig signingConfigs.debug
         }
     }
