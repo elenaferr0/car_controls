@@ -27,7 +27,7 @@ class _NotificationModalPage<T> extends Page<T> {
     required this.builder,
     this.anchorPoint,
     this.barrierColor = Colors.black54,
-    this.barrierDismissible = true,
+    this.barrierDismissible = false,
     this.barrierLabel,
     this.useSafeArea = true,
     this.themes,

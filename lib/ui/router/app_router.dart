@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../business/models/minimal_notification.dart';
-import '../modals/notification_modal_bottom_sheet.dart';
+import '../modals/notifications/notification_modal_bottom_sheet.dart';
 import '../pages/home/home_page.dart';
 
 /// The application router, used to navigate between pages and dialogs.
@@ -42,6 +42,8 @@ class AppRouter extends GoRouter {
     final MinimalNotification notification,
   ) async =>
       push(NotificationModalBottomSheet.buildLocation(), extra: notification);
+
+  void closeNotificationModal() => pop();
 }
 
 /// A navigator observer used to log navigation between pages.
@@ -50,12 +52,17 @@ class _LoggingNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPush(
-      final Route<dynamic> route, final Route<dynamic>? previousRoute) {
+    final Route<dynamic> route,
+    final Route<dynamic>? previousRoute,
+  ) {
     _logger.info('entering $previousRoute -> $route');
   }
 
   @override
-  void didPop(final Route<dynamic> route, final Route<dynamic>? previousRoute) {
+  void didPop(
+    final Route<dynamic> route,
+    final Route<dynamic>? previousRoute,
+  ) {
     _logger.info('leaving $previousRoute -> $route');
   }
 }

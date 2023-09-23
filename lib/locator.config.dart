@@ -16,7 +16,8 @@ import 'package:car_controls/business/volume_service.dart' as _i10;
 import 'package:car_controls/repository/module.dart' as _i15;
 import 'package:car_controls/repository/spotify_remote_repository.dart' as _i12;
 import 'package:car_controls/repository/volume_repository.dart' as _i9;
-import 'package:car_controls/ui/app_bloc.dart' as _i11;
+import 'package:car_controls/ui/modals/notifications/bloc/notifications_bloc.dart'
+    as _i11;
 import 'package:car_controls/ui/module.dart' as _i16;
 import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i14;
 import 'package:car_controls/ui/router/app_router.dart' as _i3;
@@ -78,7 +79,7 @@ extension GetItInjectableX on _i1.GetIt {
       },
       preResolve: true,
     );
-    gh.factory<_i11.AppBloc>(() => _i11.AppBloc(
+    gh.factory<_i11.NotificationsBloc>(() => _i11.NotificationsBloc(
           gh<_i7.NotificationsService>(),
           gh<_i3.AppRouter>(),
         ));

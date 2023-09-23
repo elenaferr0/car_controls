@@ -1,6 +1,11 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../business/models/minimal_notification.dart';
 import '../../locator.dart';
+import '../modals/notifications/bloc/notifications_bloc.dart';
 import '../pages/home/bloc/home_bloc.dart';
 import '../router/app_router.dart';
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../locator.dart';
+import '../../modals/notifications/bloc/notifications_bloc.dart';
 import '../../router/fade_in_go_route.dart';
 import '../../widgets/playing_track.dart';
 import 'bloc/home_bloc.dart';
@@ -17,7 +18,12 @@ class HomeRoute extends FadeInGoRoute {
   static Widget _builder(
     final BuildContext context,
     final GoRouterState state,
-  ) => BlocInjector<HomeBloc>(child: const _HomeWidget());
+  ) =>
+      BlocInjector<HomeBloc>(
+        child: BlocInjector<NotificationsBloc>(
+          child: const _HomeWidget(),
+        ),
+      );
 }
 
 class _HomeWidget extends StatelessWidget {
@@ -25,21 +31,16 @@ class _HomeWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    // to be removed, needed for notifications bloc to work
+    context.watch<NotificationsBloc>();
     return Scaffold(
       body: Center(
         child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (final context, final state) {
-            if (state is NoDataHomeState) {
-              return const Text('No data');
-            } else if (state is LoadingHomeState) {
-              return const CircularProgressIndicator();
-            } else if (state is AvailableDataHomeState) {
-              return const PlayingTrackWidget();
-            } else {
-              return const Center(
-                child: Text('Unknown state'),
-              );
-            }
+          builder: (final context, final state) => switch (state) {
+            NoDataHomeState() => const Text('No data'),
+            LoadingHomeState() => const CircularProgressIndicator(),
+            AvailableDataHomeState() => const PlayingTrackWidget(),
+            _ => const Center(child: Text('Unknown state')),
           },
         ),
       ),

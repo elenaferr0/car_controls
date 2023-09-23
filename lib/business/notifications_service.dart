@@ -8,12 +8,18 @@ import 'package:logging/logging.dart';
 
 import 'models/minimal_notification.dart';
 
-// we must use static method, to handle in background
 @singleton
 class NotificationsService {
   final _port = ReceivePort();
   static final log = Logger('NotificationsService');
-  final _controller = StreamController<MinimalNotification>();
+  final _controller = StreamController<MinimalNotification>.broadcast();
+  final List<String> _allowedChannelIds = [
+    'com.android.shell',
+    // telegram
+    'org.telegram.messenger',
+    // whatsapp
+    'com.whatsapp',
+  ];
 
   Stream<MinimalNotification> get notificationStream => _controller.stream;
 
@@ -33,6 +39,9 @@ class NotificationsService {
     IsolateNameServer.removePortNameMapping('_listener_');
     IsolateNameServer.registerPortWithName(_port.sendPort, '_listener_');
     _port.listen((final event) {
+      if (!_allowedChannelIds.contains(event.packageName)) {
+        return;
+      }
       log.fine('receive event from background: $event');
       _controller.add(MinimalNotification.fromNotificationEvent(event));
     });
