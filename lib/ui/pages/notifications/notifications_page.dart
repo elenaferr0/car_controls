@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../locator.dart';
-import '../../modals/notifications/bloc/notifications_bloc.dart';
 import '../../router/fade_in_go_route.dart';
+import 'bloc/notifications_bloc.dart';
 
 class NotificationsRoute extends FadeInGoRoute {
   static const String _path = '/notifications';

@@ -16,12 +16,11 @@ import 'package:car_controls/business/volume_service.dart' as _i12;
 import 'package:car_controls/repository/module.dart' as _i18;
 import 'package:car_controls/repository/spotify_remote_repository.dart' as _i15;
 import 'package:car_controls/repository/volume_repository.dart' as _i11;
-import 'package:car_controls/ui/modals/notifications/bloc/notifications_bloc.dart'
-    as _i14;
+import 'package:car_controls/ui/app_bloc.dart' as _i13;
 import 'package:car_controls/ui/module.dart' as _i19;
 import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i17;
 import 'package:car_controls/ui/pages/home/widgets/nav_bar/bloc/nav_bar_bloc.dart'
-    as _i13;
+    as _i14;
 import 'package:car_controls/ui/pages/notifications/bloc/notifications_bloc.dart'
     as _i7;
 import 'package:car_controls/ui/pages/settings/bloc/settings_bloc.dart' as _i9;
@@ -86,13 +85,13 @@ extension GetItInjectableX on _i1.GetIt {
       },
       preResolve: true,
     );
-    gh.factory<_i13.NavBarBloc>(() => _i13.NavBarBloc(
-          gh<_i3.AppRouter>(),
+    gh.factory<_i13.AppBloc>(() => _i13.AppBloc(
           gh<_i8.NotificationsService>(),
+          gh<_i3.AppRouter>(),
         ));
-    gh.factory<_i14.NotificationsBloc>(() => _i14.NotificationsBloc(
-          gh<_i8.NotificationsService>(),
+    gh.factory<_i14.NavBarBloc>(() => _i14.NavBarBloc(
           gh<_i3.AppRouter>(),
+          gh<_i8.NotificationsService>(),
         ));
     gh.singleton<_i15.SpotifyRemoteRepository>(_i15.SpotifyRemoteRepository(
       gh<String>(instanceName: 'clientId'),

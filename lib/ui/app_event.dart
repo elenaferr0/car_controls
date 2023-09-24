@@ -1,10 +1,10 @@
-part of 'notifications_bloc.dart';
+part of 'app_bloc.dart';
 
-sealed class NotificationsEvent extends Equatable {
-  const NotificationsEvent();
+sealed class AppEvent extends Equatable {
+  const AppEvent();
 }
 
-class OpenNotificationModalAppEvent extends NotificationsEvent {
+class OpenNotificationModalAppEvent extends AppEvent {
   final MinimalNotification notification;
 
   const OpenNotificationModalAppEvent(this.notification);
@@ -13,7 +13,7 @@ class OpenNotificationModalAppEvent extends NotificationsEvent {
   List<Object?> get props => [notification];
 }
 
-class CloseNotificationModalAppEvent extends NotificationsEvent {
+class CloseNotificationModalAppEvent extends AppEvent {
   const CloseNotificationModalAppEvent();
 
   @override

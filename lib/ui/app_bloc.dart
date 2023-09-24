@@ -1,34 +1,36 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../business/models/minimal_notification.dart';
 import '../../../../business/notifications_service.dart';
-import '../../../router/app_router.dart';
 
-part 'notifications_event.dart';
+part 'app_event.dart';
 
-part 'notifications_state.dart';
+part 'app_state.dart';
 
 @injectable
-class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
+class AppBloc extends Bloc<AppEvent, AppState> {
   final NotificationsService _notificationsService;
   final AppRouter _appRouter;
   late final StreamSubscription<MinimalNotification> _notificationsSubscription;
   final notificationDuration = const Duration(seconds: 3, milliseconds: 500);
 
-  NotificationsBloc(
+  AppBloc(
     this._notificationsService,
     this._appRouter,
-  ) : super(const NotificationsState()) {
+  ) : super(const AppState()) {
     _notificationsSubscription =
         _notificationsService.notificationStream.listen(
-      (final event) => add(OpenNotificationModalAppEvent(event)),
+      (final event) => add(
+        OpenNotificationModalAppEvent(event),
+      ),
     );
 
-    on<NotificationsEvent>((final event, final emitter) async {
+    on<AppEvent>((final event, final emitter) async {
       switch (event) {
         case OpenNotificationModalAppEvent():
           await _openNotificationModal(event, emitter);
@@ -40,8 +42,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   Future<void> _openNotificationModal(
     final OpenNotificationModalAppEvent event,
-    final Emitter<NotificationsState> emitter,
+    final Emitter<AppState> emitter,
   ) async {
+    // TODO: if location is not the home page, do not open the modal
     if (state.isNotificationModalOpen) {
       return;
     }
@@ -56,7 +59,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   Future<void> _closeNotificationModal(
     final CloseNotificationModalAppEvent event,
-    final Emitter<NotificationsState> emitter,
+    final Emitter<AppState> emitter,
   ) async {
     if (!state.isNotificationModalOpen) {
       return;

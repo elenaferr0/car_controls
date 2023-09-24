@@ -1,16 +1,16 @@
-part of 'notifications_bloc.dart';
+part of 'app_bloc.dart';
 
-class NotificationsState {
+class AppState {
   final bool isNotificationModalOpen;
 
-  const NotificationsState({
+  const AppState({
     this.isNotificationModalOpen = false,
   });
 
-  NotificationsState copyWith({
+  AppState copyWith({
     final bool? isNotificationModalOpen,
   }) =>
-      NotificationsState(
+      AppState(
         isNotificationModalOpen:
             isNotificationModalOpen ?? this.isNotificationModalOpen,
       );

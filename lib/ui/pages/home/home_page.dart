@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../locator.dart';
-import '../../modals/notifications/bloc/notifications_bloc.dart';
 import '../../router/fade_in_go_route.dart';
 import '../../widgets/playing_track.dart';
 import 'bloc/home_bloc.dart';
@@ -20,9 +19,7 @@ class HomeRoute extends FadeInGoRoute {
     final GoRouterState state,
   ) =>
       BlocInjector<HomeBloc>(
-        child: BlocInjector<NotificationsBloc>(
-          child: const _HomeWidget(),
-        ),
+        child: const _HomeWidget(),
       );
 }
 
@@ -31,8 +28,6 @@ class _HomeWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    // to be removed, needed for notifications bloc to work
-    context.watch<NotificationsBloc>();
     return Center(
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (final context, final state) => switch (state) {

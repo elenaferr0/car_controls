@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../business/models/minimal_notification.dart';
+import '../../app_bloc.dart';
 import '../../router/modal_bottom_sheet_route.dart';
-import 'bloc/notifications_bloc.dart';
 
 class NotificationModalBottomSheet extends ModalBottomSheetGoRoute {
   static const String _path = '/modals/notifications';
@@ -30,7 +30,7 @@ class _NotificationModalBottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final bloc = context.watch<NotificationsBloc>();
+    final bloc = context.read<AppBloc>();
     return SizedBox(
       height: 200,
       width: double.infinity,
