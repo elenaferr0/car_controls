@@ -11,17 +11,15 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:car_controls/business/log_service.dart' as _i6;
 import 'package:car_controls/business/notifications_service.dart' as _i8;
-import 'package:car_controls/business/spotify_remote_service.dart' as _i16;
+import 'package:car_controls/business/spotify_remote_service.dart' as _i15;
 import 'package:car_controls/business/volume_service.dart' as _i12;
-import 'package:car_controls/repository/module.dart' as _i18;
-import 'package:car_controls/repository/spotify_remote_repository.dart' as _i15;
+import 'package:car_controls/repository/module.dart' as _i17;
+import 'package:car_controls/repository/spotify_remote_repository.dart' as _i14;
 import 'package:car_controls/repository/volume_repository.dart' as _i11;
 import 'package:car_controls/ui/app_bloc.dart' as _i13;
-import 'package:car_controls/ui/module.dart' as _i19;
-import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i17;
+import 'package:car_controls/ui/module.dart' as _i18;
+import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i16;
 import 'package:car_controls/ui/pages/home/widgets/nav_bar/bloc/nav_bar_bloc.dart'
-    as _i14;
-import 'package:car_controls/ui/pages/notifications/bloc/notifications_bloc.dart'
     as _i7;
 import 'package:car_controls/ui/pages/settings/bloc/settings_bloc.dart' as _i9;
 import 'package:car_controls/ui/router/app_router.dart' as _i3;
@@ -57,7 +55,7 @@ extension GetItInjectableX on _i1.GetIt {
       _i6.LogService()..init(),
       dispose: (i) => i.dispose(),
     );
-    gh.factory<_i7.NotificationsBloc>(() => _i7.NotificationsBloc());
+    gh.factory<_i7.NavBarBloc>(() => _i7.NavBarBloc(gh<_i3.AppRouter>()));
     await gh.singletonAsync<_i8.NotificationsService>(
       () {
         final i = _i8.NotificationsService();
@@ -85,33 +83,35 @@ extension GetItInjectableX on _i1.GetIt {
       },
       preResolve: true,
     );
-    gh.factory<_i13.AppBloc>(() => _i13.AppBloc(
+    await gh.factoryAsync<_i13.AppBloc>(
+      () {
+        final i = _i13.AppBloc(
           gh<_i8.NotificationsService>(),
           gh<_i3.AppRouter>(),
-        ));
-    gh.factory<_i14.NavBarBloc>(() => _i14.NavBarBloc(
-          gh<_i3.AppRouter>(),
-          gh<_i8.NotificationsService>(),
-        ));
-    gh.singleton<_i15.SpotifyRemoteRepository>(_i15.SpotifyRemoteRepository(
+        );
+        return i.init().then((_) => i);
+      },
+      preResolve: true,
+    );
+    gh.singleton<_i14.SpotifyRemoteRepository>(_i14.SpotifyRemoteRepository(
       gh<String>(instanceName: 'clientId'),
       gh<String>(instanceName: 'redirectUrl'),
     ));
-    await gh.singletonAsync<_i16.SpotifyRemoteService>(
+    await gh.singletonAsync<_i15.SpotifyRemoteService>(
       () {
-        final i = _i16.SpotifyRemoteService(gh<_i15.SpotifyRemoteRepository>());
+        final i = _i15.SpotifyRemoteService(gh<_i14.SpotifyRemoteRepository>());
         return i.connect().then((_) => i);
       },
       preResolve: true,
     );
-    gh.factory<_i17.HomeBloc>(() => _i17.HomeBloc(
-          gh<_i16.SpotifyRemoteService>(),
+    gh.factory<_i16.HomeBloc>(() => _i16.HomeBloc(
+          gh<_i15.SpotifyRemoteService>(),
           gh<_i12.VolumeService>(),
         ));
     return this;
   }
 }
 
-class _$RepositoryModule extends _i18.RepositoryModule {}
+class _$RepositoryModule extends _i17.RepositoryModule {}
 
-class _$UIModule extends _i19.UIModule {}
+class _$UIModule extends _i18.UIModule {}

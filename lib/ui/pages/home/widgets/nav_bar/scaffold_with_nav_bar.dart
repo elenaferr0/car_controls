@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../locator.dart';
-import '../../../notifications/notifications_page.dart';
 import '../../../settings/settings_page.dart';
 import '../../home_page.dart';
 import 'bloc/nav_bar_bloc.dart';
@@ -13,7 +12,6 @@ class ScaffoldWithNavBarRoute extends ShellRoute {
   ScaffoldWithNavBarRoute()
       : super(builder: _builder, routes: [
           HomeRoute(),
-          NotificationsRoute(),
           SettingsRoute(),
         ]);
 
@@ -41,24 +39,13 @@ class _ScaffoldWithNavBarWidget extends StatelessWidget {
         onDestinationSelected: (final index) => bloc.add(
           NavBarEventTabChanged(selectedIndex: NavBarIndex.fromInt(index)),
         ),
-        destinations: [
-          const NavigationDestination(
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.music_note_outlined, size: 30),
             selectedIcon: Icon(Icons.music_note, size: 30),
             label: 'Spotify',
           ),
-          bloc.state.hasUnreadNotifications
-              ? const NavigationDestination(
-                  icon: Icon(Icons.notifications_active_outlined, size: 30),
-                  selectedIcon: Icon(Icons.notifications_active, size: 30),
-                  label: 'Notifications',
-                )
-              : const NavigationDestination(
-                  icon: Icon(Icons.notifications_outlined, size: 30),
-                  selectedIcon: Icon(Icons.notifications, size: 30),
-                  label: 'Notifications',
-                ),
-          const NavigationDestination(
+          NavigationDestination(
             icon: Icon(Icons.settings_outlined, size: 30),
             selectedIcon: Icon(Icons.settings, size: 30),
             label: 'Settings',

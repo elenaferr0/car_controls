@@ -9,7 +9,6 @@ import '../modals/notifications/notification_modal_bottom_sheet.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/widgets/nav_bar/nav_bar_index.dart';
 import '../pages/home/widgets/nav_bar/scaffold_with_nav_bar.dart';
-import '../pages/notifications/notifications_page.dart';
 import '../pages/settings/settings_page.dart';
 
 /// The application router, used to navigate between pages and dialogs.
@@ -32,7 +31,6 @@ class AppRouter extends GoRouter {
 
   final _navBarIndexRoutes = {
     NavBarIndex.home: HomeRoute.buildLocation(),
-    NavBarIndex.notifications: NotificationsRoute.buildLocation(),
     NavBarIndex.settings: SettingsRoute.buildLocation(),
   };
 

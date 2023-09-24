@@ -14,12 +14,3 @@ class NavBarEventTabChanged extends NavBarEvent {
   @override
   List<Object?> get props => [selectedIndex];
 }
-
-class ReceivedNotificationEvent extends NavBarEvent {
-  final MinimalNotification notification;
-
-  const ReceivedNotificationEvent(this.notification);
-
-  @override
-  List<Object?> get props => [notification];
-}

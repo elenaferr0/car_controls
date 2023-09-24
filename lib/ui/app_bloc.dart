@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 import 'router/app_router.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -40,6 +41,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     });
   }
 
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
+    await KeepScreenOn.turnOn();
+  }
+
   Future<void> _openNotificationModal(
     final OpenNotificationModalAppEvent event,
     final Emitter<AppState> emitter,
@@ -71,6 +77,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   @override
   Future<void> close() {
     _notificationsSubscription.cancel();
+    KeepScreenOn.turnOff();
     return super.close();
   }
 }

@@ -1,7 +1,6 @@
 enum NavBarIndex {
   home(0),
-  notifications(1),
-  settings(2);
+  settings(1);
 
   final int value;
 

@@ -132,7 +132,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Future<void> close() async {
     await _playerSubscription.cancel();
-    await KeepScreenOn.turnOff();
     return super.close();
   }
 }
