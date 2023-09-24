@@ -13,7 +13,7 @@ class NotificationsService {
   final _port = ReceivePort();
   static final log = Logger('NotificationsService');
   final _controller = StreamController<MinimalNotification>.broadcast();
-  final List<String> _allowedChannelIds = [
+  final List<String> _allowedPackageNames = [
     'com.android.shell',
     // telegram
     'org.telegram.messenger',
@@ -39,7 +39,7 @@ class NotificationsService {
     IsolateNameServer.removePortNameMapping('_listener_');
     IsolateNameServer.registerPortWithName(_port.sendPort, '_listener_');
     _port.listen((final event) {
-      if (!_allowedChannelIds.contains(event.packageName)) {
+      if (!_allowedPackageNames.contains(event.packageName)) {
         return;
       }
       log.fine('receive event from background: $event');
