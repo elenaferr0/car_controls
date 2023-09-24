@@ -10,22 +10,25 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:car_controls/business/log_service.dart' as _i6;
-import 'package:car_controls/business/notifications_service.dart' as _i7;
-import 'package:car_controls/business/spotify_remote_service.dart' as _i13;
-import 'package:car_controls/business/volume_service.dart' as _i10;
-import 'package:car_controls/repository/module.dart' as _i15;
-import 'package:car_controls/repository/spotify_remote_repository.dart' as _i12;
-import 'package:car_controls/repository/volume_repository.dart' as _i9;
+import 'package:car_controls/business/notifications_service.dart' as _i8;
+import 'package:car_controls/business/spotify_remote_service.dart' as _i15;
+import 'package:car_controls/business/volume_service.dart' as _i12;
+import 'package:car_controls/repository/module.dart' as _i17;
+import 'package:car_controls/repository/spotify_remote_repository.dart' as _i14;
+import 'package:car_controls/repository/volume_repository.dart' as _i11;
 import 'package:car_controls/ui/modals/notifications/bloc/notifications_bloc.dart'
-    as _i11;
-import 'package:car_controls/ui/module.dart' as _i16;
-import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i14;
+    as _i13;
+import 'package:car_controls/ui/module.dart' as _i18;
+import 'package:car_controls/ui/pages/home/bloc/home_bloc.dart' as _i16;
+import 'package:car_controls/ui/pages/home/widgets/nav_bar/bloc/nav_bar_bloc.dart'
+    as _i7;
+import 'package:car_controls/ui/pages/settings/bloc/settings_bloc.dart' as _i9;
 import 'package:car_controls/ui/router/app_router.dart' as _i3;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as _i4;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:keep_screen_on/keep_screen_on.dart' as _i5;
-import 'package:volume_controller/volume_controller.dart' as _i8;
+import 'package:volume_controller/volume_controller.dart' as _i10;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -53,14 +56,16 @@ extension GetItInjectableX on _i1.GetIt {
       _i6.LogService()..init(),
       dispose: (i) => i.dispose(),
     );
-    await gh.singletonAsync<_i7.NotificationsService>(
+    gh.factory<_i7.NavBarBloc>(() => _i7.NavBarBloc(gh<_i3.AppRouter>()));
+    await gh.singletonAsync<_i8.NotificationsService>(
       () {
-        final i = _i7.NotificationsService();
+        final i = _i8.NotificationsService();
         return i.initPlatformState().then((_) => i);
       },
       preResolve: true,
       dispose: (i) => i.stopListening(),
     );
+    gh.factory<_i9.SettingsBloc>(() => _i9.SettingsBloc());
     gh.factory<String>(
       () => repositoryModule.getClientId(gh<_i4.DotEnv>()),
       instanceName: 'clientId',
@@ -69,39 +74,39 @@ extension GetItInjectableX on _i1.GetIt {
       () => repositoryModule.getRedirectUrl(gh<_i4.DotEnv>()),
       instanceName: 'redirectUrl',
     );
-    gh.singleton<_i8.VolumeController>(repositoryModule.getVolumeController());
-    gh.singleton<_i9.VolumeRepository>(
-        _i9.VolumeRepository(gh<_i8.VolumeController>()));
-    await gh.singletonAsync<_i10.VolumeService>(
+    gh.singleton<_i10.VolumeController>(repositoryModule.getVolumeController());
+    gh.singleton<_i11.VolumeRepository>(
+        _i11.VolumeRepository(gh<_i10.VolumeController>()));
+    await gh.singletonAsync<_i12.VolumeService>(
       () {
-        final i = _i10.VolumeService(gh<_i9.VolumeRepository>());
+        final i = _i12.VolumeService(gh<_i11.VolumeRepository>());
         return i.init().then((_) => i);
       },
       preResolve: true,
     );
-    gh.factory<_i11.NotificationsBloc>(() => _i11.NotificationsBloc(
-          gh<_i7.NotificationsService>(),
+    gh.factory<_i13.NotificationsBloc>(() => _i13.NotificationsBloc(
+          gh<_i8.NotificationsService>(),
           gh<_i3.AppRouter>(),
         ));
-    gh.singleton<_i12.SpotifyRemoteRepository>(_i12.SpotifyRemoteRepository(
+    gh.singleton<_i14.SpotifyRemoteRepository>(_i14.SpotifyRemoteRepository(
       gh<String>(instanceName: 'clientId'),
       gh<String>(instanceName: 'redirectUrl'),
     ));
-    await gh.singletonAsync<_i13.SpotifyRemoteService>(
+    await gh.singletonAsync<_i15.SpotifyRemoteService>(
       () {
-        final i = _i13.SpotifyRemoteService(gh<_i12.SpotifyRemoteRepository>());
+        final i = _i15.SpotifyRemoteService(gh<_i14.SpotifyRemoteRepository>());
         return i.connect().then((_) => i);
       },
       preResolve: true,
     );
-    gh.factory<_i14.HomeBloc>(() => _i14.HomeBloc(
-          gh<_i13.SpotifyRemoteService>(),
-          gh<_i10.VolumeService>(),
+    gh.factory<_i16.HomeBloc>(() => _i16.HomeBloc(
+          gh<_i15.SpotifyRemoteService>(),
+          gh<_i12.VolumeService>(),
         ));
     return this;
   }
 }
 
-class _$RepositoryModule extends _i15.RepositoryModule {}
+class _$RepositoryModule extends _i17.RepositoryModule {}
 
-class _$UIModule extends _i16.UIModule {}
+class _$UIModule extends _i18.UIModule {}

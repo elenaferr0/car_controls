@@ -33,16 +33,14 @@ class _HomeWidget extends StatelessWidget {
   Widget build(final BuildContext context) {
     // to be removed, needed for notifications bloc to work
     context.watch<NotificationsBloc>();
-    return Scaffold(
-      body: Center(
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (final context, final state) => switch (state) {
-            NoDataHomeState() => const Text('No data'),
-            LoadingHomeState() => const CircularProgressIndicator(),
-            AvailableDataHomeState() => const PlayingTrackWidget(),
-            _ => const Center(child: Text('Unknown state')),
-          },
-        ),
+    return Center(
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (final context, final state) => switch (state) {
+          NoDataHomeState() => const Text('No data'),
+          LoadingHomeState() => const CircularProgressIndicator(),
+          AvailableDataHomeState() => const PlayingTrackWidget(),
+          _ => const Center(child: Text('Unknown state')),
+        },
       ),
     );
   }

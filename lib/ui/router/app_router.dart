@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import '../../business/models/minimal_notification.dart';
 import '../modals/notifications/notification_modal_bottom_sheet.dart';
 import '../pages/home/home_page.dart';
+import '../pages/home/widgets/nav_bar/scaffold_with_nav_bar.dart';
 
 /// The application router, used to navigate between pages and dialogs.
 @singleton
@@ -30,8 +31,7 @@ class AppRouter extends GoRouter {
       : super(
           debugLogDiagnostics: kDebugMode,
           routes: [
-            // pages
-            HomeRoute(),
+            ScaffoldWithNavBarRoute(),
             // modals
             NotificationModalBottomSheet(),
           ],
@@ -44,6 +44,9 @@ class AppRouter extends GoRouter {
       push(NotificationModalBottomSheet.buildLocation(), extra: notification);
 
   void closeNotificationModal() => pop();
+
+  void goToNavBarItemWithIndex(final int index) =>
+      go(ScaffoldWithNavBarRoute.getPathWithIndex(index));
 }
 
 /// A navigator observer used to log navigation between pages.
