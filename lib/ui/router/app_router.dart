@@ -7,7 +7,10 @@ import 'package:logging/logging.dart';
 import '../../business/models/minimal_notification.dart';
 import '../modals/notifications/notification_modal_bottom_sheet.dart';
 import '../pages/home/home_page.dart';
+import '../pages/home/widgets/nav_bar/nav_bar_index.dart';
 import '../pages/home/widgets/nav_bar/scaffold_with_nav_bar.dart';
+import '../pages/notifications/notifications_page.dart';
+import '../pages/settings/settings_page.dart';
 
 /// The application router, used to navigate between pages and dialogs.
 @singleton
@@ -27,9 +30,16 @@ class AppRouter extends GoRouter {
         .toString();
   }
 
+  final _navBarIndexRoutes = {
+    NavBarIndex.home: HomeRoute.buildLocation(),
+    NavBarIndex.notifications: NotificationsRoute.buildLocation(),
+    NavBarIndex.settings: SettingsRoute.buildLocation(),
+  };
+
   AppRouter()
       : super(
           debugLogDiagnostics: kDebugMode,
+          initialLocation: HomeRoute.buildLocation(),
           routes: [
             ScaffoldWithNavBarRoute(),
             // modals
@@ -45,8 +55,13 @@ class AppRouter extends GoRouter {
 
   void closeNotificationModal() => pop();
 
-  void goToNavBarItemWithIndex(final int index) =>
-      go(ScaffoldWithNavBarRoute.getPathWithIndex(index));
+  void goToNavBarItemWithIndex(final NavBarIndex navBarIndex) {
+    final route = _navBarIndexRoutes[navBarIndex];
+    if (route == null) {
+      throw Exception('No route for index $navBarIndex');
+    }
+    go(route);
+  }
 }
 
 /// A navigator observer used to log navigation between pages.

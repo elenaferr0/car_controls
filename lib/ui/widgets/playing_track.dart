@@ -1,13 +1,7 @@
-import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../business/models/minimal_notification.dart';
-import '../../locator.dart';
-import '../modals/notifications/bloc/notifications_bloc.dart';
+
 import '../pages/home/bloc/home_bloc.dart';
-import '../router/app_router.dart';
 
 const padding = 20.0;
 
@@ -51,11 +45,13 @@ class PlayingTrackWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Spacer(flex: 2),
           _ImageWidget(),
           SizedBox(height: 10),
           _TrackInfoWidget(),
           SizedBox(height: 20),
           _ControlsWidget(),
+          Spacer(),
         ],
       ),
     );
@@ -136,7 +132,6 @@ class _TrackInfoWidget extends StatelessWidget {
 }
 
 class _ControlsWidget extends StatelessWidget {
-  static const iconSize = 70.0;
   static const Color iconColor = Colors.black87;
 
   const _ControlsWidget();
@@ -144,6 +139,7 @@ class _ControlsWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final bloc = context.read<HomeBloc>();
+    final theme = Theme.of(context);
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (final previous, final current) =>
           previous is AvailableDataHomeState &&
@@ -158,35 +154,35 @@ class _ControlsWidget extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () => bloc.add(SkipPreviousHomeEvent()),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.skip_previous,
-                    size: iconSize,
+                    size: theme.iconTheme.size,
                     color: iconColor,
                   ),
                 ),
                 state.isPaused
                     ? IconButton(
                         onPressed: () => bloc.add(PlayHomeEvent()),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.play_circle,
-                          size: iconSize * 1.5,
                           color: iconColor,
+                          size: theme.iconTheme.size! * 1.5,
                         ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(PauseHomeEvent()),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.pause_circle,
-                          size: iconSize * 1.5,
+                          size: theme.iconTheme.size! * 1.5,
                           color: iconColor,
                         ),
                       ),
                 IconButton(
                   onPressed: () => bloc.add(SkipNextHomeEvent()),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.skip_next,
-                    size: iconSize,
                     color: iconColor,
+                    size: theme.iconTheme.size,
                   ),
                 ),
               ],
@@ -201,20 +197,20 @@ class _ControlsWidget extends StatelessWidget {
                         onPressed: () => bloc.add(
                           RemoveTrackHomeEvent(state.track.uri),
                         ),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.favorite,
-                          size: iconSize * 0.7,
                           color: iconColor,
+                          size: theme.iconTheme.size! * 0.7,
                         ),
                       )
                     : IconButton(
                         onPressed: () => bloc.add(
                           SaveTrackHomeEvent(state.track.uri),
                         ),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.favorite_border,
-                          size: iconSize * 0.7,
                           color: iconColor,
+                          size: theme.iconTheme.size! * 0.7,
                         ),
                       ),
                 IconButton(
@@ -222,14 +218,14 @@ class _ControlsWidget extends StatelessWidget {
                     ToggleShuffleHomeEvent(state.isShuffleEnabled),
                   ),
                   icon: state.isShuffleEnabled
-                      ? const Icon(
+                      ? Icon(
                           Icons.shuffle,
-                          size: iconSize * 0.7,
                           color: iconColor,
+                          size: theme.iconTheme.size! * 0.7,
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.shuffle_outlined,
-                          size: iconSize * 0.7,
+                          size: theme.iconTheme.size! * 0.7,
                           color: Colors.black45,
                         ),
                 ),

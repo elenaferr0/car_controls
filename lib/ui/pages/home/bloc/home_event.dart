@@ -4,6 +4,13 @@ part of 'home_bloc.dart';
 sealed class HomeEvent {}
 
 @immutable
+class PlayerStateChangedHomeEvent extends HomeEvent {
+  final PlayerState? playerState;
+
+  PlayerStateChangedHomeEvent(this.playerState);
+}
+
+@immutable
 class PlayHomeEvent extends HomeEvent {}
 
 @immutable

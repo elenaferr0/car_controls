@@ -6,14 +6,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:keep_screen_on/keep_screen_on.dart';
-import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/models/track.dart';
+
 import '../../../../business/spotify_remote_service.dart';
 import '../../../../business/volume_service.dart';
 
 part 'home_event.dart';
-
 part 'home_state.dart';
 
 @injectable
@@ -21,14 +20,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SpotifyRemoteService _spotifyRemoteService;
   final VolumeService _volumeService;
   late final StreamSubscription _playerSubscription;
-  final Map<ImageUri, Uint8List> _cachedImages = {};
 
   HomeBloc(
     this._spotifyRemoteService,
     this._volumeService,
   ) : super(LoadingHomeState()) {
-    _playerSubscription =
-        _spotifyRemoteService.playerState.listen(_onPlayerStateChanged);
+    _playerSubscription = _spotifyRemoteService.playerState.listen(
+      (final playerState) => add(
+        PlayerStateChangedHomeEvent(playerState!),
+      ),
+    );
     on<HomeEvent>((final event, final emitter) async {
       switch (event) {
         case PlayHomeEvent():
@@ -47,6 +48,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           await _toggleShuffle(event, emitter);
         case SwipeGestureDetectedHomeEvent():
           _swipeGestureDetected(event, emitter);
+        case PlayerStateChangedHomeEvent():
+          await _onPlayerStateChanged(event, emitter);
       }
     });
   }
@@ -67,27 +70,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     await _spotifyRemoteService.performAction(PlayerAction.skipPrevious);
   }
 
-  Future<void> _onPlayerStateChanged(final PlayerState? playerState) async {
-    if (playerState == null || playerState.track == null) {
-      emit(NoDataHomeState());
+  Future<void> _onPlayerStateChanged(
+    final PlayerStateChangedHomeEvent event,
+    final Emitter<HomeState> emitter,
+  ) async {
+    if (event.playerState == null || event.playerState?.track == null) {
+      emitter(NoDataHomeState());
       return;
     }
 
-    late Uint8List? image;
-    if (!_cachedImages.containsKey(playerState.track!.imageUri)) {
-      image = await _spotifyRemoteService.getImage(
-        playerState.track!.imageUri,
-      );
-      if (image != null) _cachedImages[playerState.track!.imageUri] = image;
-    } else {
-      image = _cachedImages[playerState.track!.imageUri];
-    }
+    final playerState = event.playerState!;
+
+    final image = await _spotifyRemoteService.getImage(
+      playerState.track!.imageUri,
+    );
 
     final isTrackInLibrary = await _spotifyRemoteService.isTrackInLibrary(
       playerState.track!.uri,
     );
 
-    emit(AvailableDataHomeState(
+    emitter(AvailableDataHomeState(
       track: playerState.track!,
       isPaused: playerState.isPaused,
       image: image,

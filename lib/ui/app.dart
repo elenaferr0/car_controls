@@ -21,6 +21,7 @@ class AppWidget extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Inter',
         colorSchemeSeed: Colors.indigo,
+        iconTheme: const IconThemeData(size: 70),
       ),
       routerConfig: locator<AppRouter>(),
     );

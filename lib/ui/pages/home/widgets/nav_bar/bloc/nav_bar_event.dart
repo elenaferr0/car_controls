@@ -1,16 +1,25 @@
 part of 'nav_bar_bloc.dart';
 
-abstract class NavBarEvent extends Equatable {
+sealed class NavBarEvent extends Equatable {
   const NavBarEvent();
 }
 
 class NavBarEventTabChanged extends NavBarEvent {
-  final int index;
+  final NavBarIndex selectedIndex;
 
   const NavBarEventTabChanged({
-    required this.index,
+    required this.selectedIndex,
   });
 
   @override
-  List<Object?> get props => [index];
+  List<Object?> get props => [selectedIndex];
+}
+
+class ReceivedNotificationEvent extends NavBarEvent {
+  final MinimalNotification notification;
+
+  const ReceivedNotificationEvent(this.notification);
+
+  @override
+  List<Object?> get props => [notification];
 }

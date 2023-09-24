@@ -9,7 +9,7 @@ import '../../widgets/playing_track.dart';
 import 'bloc/home_bloc.dart';
 
 class HomeRoute extends FadeInGoRoute {
-  static const String _path = '/';
+  static const String _path = '/home';
 
   static String buildLocation() => _path;
 

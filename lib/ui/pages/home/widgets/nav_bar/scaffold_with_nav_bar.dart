@@ -3,21 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../locator.dart';
+import '../../../notifications/notifications_page.dart';
 import '../../../settings/settings_page.dart';
 import '../../home_page.dart';
 import 'bloc/nav_bar_bloc.dart';
+import 'nav_bar_index.dart';
 
 class ScaffoldWithNavBarRoute extends ShellRoute {
-  static final _routeIndex = <int, GoRoute>{
-    0: HomeRoute(),
-    1: SettingsRoute(),
-  };
-
   ScaffoldWithNavBarRoute()
-      : super(
-          builder: _builder,
-          routes: _routeIndex.values.toList(),
-        );
+      : super(builder: _builder, routes: [
+          HomeRoute(),
+          NotificationsRoute(),
+          SettingsRoute(),
+        ]);
 
   static Widget _builder(
     final BuildContext context,
@@ -25,9 +23,6 @@ class ScaffoldWithNavBarRoute extends ShellRoute {
     final Widget child,
   ) =>
       BlocInjector<NavBarBloc>(child: _ScaffoldWithNavBarWidget(child: child));
-
-  static String getPathWithIndex(final int index) =>
-      _routeIndex[index]?.path ?? HomeRoute.buildLocation();
 }
 
 class _ScaffoldWithNavBarWidget extends StatelessWidget {
@@ -40,18 +35,32 @@ class _ScaffoldWithNavBarWidget extends StatelessWidget {
     final bloc = context.watch<NavBarBloc>();
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: bloc.state.currentIndex,
-        onTap: (final index) {
-          bloc.add(NavBarEventTabChanged(index: index));
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.music_note),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: bloc.state.currentIndex.value,
+        height: 90,
+        onDestinationSelected: (final index) => bloc.add(
+          NavBarEventTabChanged(selectedIndex: NavBarIndex.fromInt(index)),
+        ),
+        destinations: [
+          const NavigationDestination(
+            icon: Icon(Icons.music_note_outlined, size: 30),
+            selectedIcon: Icon(Icons.music_note, size: 30),
             label: 'Spotify',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+          bloc.state.hasUnreadNotifications
+              ? const NavigationDestination(
+                  icon: Icon(Icons.notifications_active_outlined, size: 30),
+                  selectedIcon: Icon(Icons.notifications_active, size: 30),
+                  label: 'Notifications',
+                )
+              : const NavigationDestination(
+                  icon: Icon(Icons.notifications_outlined, size: 30),
+                  selectedIcon: Icon(Icons.notifications, size: 30),
+                  label: 'Notifications',
+                ),
+          const NavigationDestination(
+            icon: Icon(Icons.settings_outlined, size: 30),
+            selectedIcon: Icon(Icons.settings, size: 30),
             label: 'Settings',
           ),
         ],
